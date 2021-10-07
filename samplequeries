@@ -1,0 +1,116 @@
+--using specific data
+select title, description, release_year, rental_rate, length, replacement_cost, rating 
+from film
+order by 1, 3;
+
+
+--using cast
+select char_length(cast(inventory_id as varchar))
+from rental;
+
+
+-- using case statments
+select customer_id,
+case
+	when (customer_id <= 100) then 'Premium'
+	when (customer_id between 100 and 200) then 'Plus'
+	else 'Normal'
+end as customer_class
+from customer;
+
+
+-- case statements
+select
+sum(case rating
+   when 'R' then 1 else 0
+   end
+   ) as r,
+sum(case rating
+   	when 'PG-13' then 2 else 0
+   	end
+   ) as pg13,
+sum(case rating
+   	when 'PG' then 3 else 0
+   	end
+   ) as pg
+from film;
+
+
+-- creating views
+create view customer_info as
+select first_name, last_name, address from customer
+inner join address
+on customer.address_id = address.address_id
+
+
+-- create or replace views
+create or replace view customer_info as
+select first_name, last_name, address, district from customer
+inner join address 
+on customer.address_id = address.address_id
+
+
+--dropping views
+drop view if exists customer_info
+
+
+--creating tables
+create table students(
+student_id serial PRIMARY KEY,
+first_name VARCHAR(45) NOT NULL,
+last_name VARCHAR(45) NOT NULL,
+homeroom_number integer,
+phone VARCHAR(20) UNIQUE NOT NULL,
+email VARCHAR(115) UNIQUE,
+grad_year integer);
+
+
+--another table
+create table teachers(
+teacher_id serial PRIMARY KEY,
+first_name VARCHAR(45) NOT NULL,
+last_name VARCHAR(45) NOT NULL,
+homeroom_number integer,
+department VARCHAR(45),
+email VARCHAR(20) UNIQUE,
+phone VARCHAR(20) UNIQUE);
+
+
+--Insert into tables
+insert into students(first_name, last_name, homeroom_number, phone, grad_year)
+values ('Deejay', 'Coleman', 4, '2115558888', 2022);
+
+
+--insert into tables
+insert into teachers(first_name, last_name, homeroom_number, department, email, phone)
+values ('Sara', 'Sanchez', 4, 'Chemistry', 'ssanchez@school.org', '2114448787');
+
+
+--removing all dependencies
+alter table students
+drop column grad_year cascade;
+
+
+--using join to get films returned on specific day
+select film_id, title
+from film
+where film_id in
+(select inventory.film_id
+from rental
+inner join inventory on inventory.inventory_id = rental.inventory_id
+where return_date between '2005-05-29' and '2005-05-30')
+
+
+--films only with a specific actor
+select title, first_name, last_name
+from film_actor
+inner join actor
+on film_actor.actor_id = actor.actor_id
+inner join film
+on film_actor.film_id = film.film_id
+where first_name = 'Nick' and last_name = 'Wahlberg';
+
+
+
+
+
