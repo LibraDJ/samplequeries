@@ -1,3 +1,15 @@
+--Using sub-queries compare employee average pay with the average hourly pay to see who is getting a pay reduction.
+SELECT first_name_, last_name, hourly_pay, 
+	(SELECT AVG(hourly_pay) FROM employees) AS ave_pay
+FROM employees;
+
+
+--Find employees with a hourly pay thats higher than the average pay
+SELECT first_name, last_name, hourly_pay 
+FROM employees
+WHERE hourly_pay > (SELECT AVG(hourly_pay) FROM employees);
+
+
 --using specific data
 select title, description, release_year, rental_rate, length, replacement_cost, rating 
 from film
