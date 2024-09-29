@@ -1,6 +1,17 @@
+-- Had a task of assigning a secret santa between 2 seperate dapartments, using the Employee ID numbers.
+-- Used a SELF JOIN to join same table in order to assign a person to be a secret santa based off their employee id
+use AS alias to specify which table i was pulling from.
+
+SELECT emp1.employee_id as emp_santa, emp1.first_name AS first_name_santa,
+       emp1.last_name AS last_name_santa, emp2.employee_id AS emp_name,
+       emp2.first_name AS first_name_emp, emp2.last_name AS last_name_emp
+FROM employee_salary emp1
+JOIN employee_salary emp2
+	ON emp1.employee_id + 1 = emp2.employee_id
+
 --Using sub-queries compare employee average pay with the average hourly pay to see who is getting a pay reduction.
 SELECT first_name_, last_name, hourly_pay, 
-	(SELECT AVG(hourly_pay) FROM employees) AS ave_pay
+	(SELECT AVG(hourly_pay) FROM employees) AS avg_pay
 FROM employees;
 
 
